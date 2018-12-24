@@ -15,22 +15,22 @@
                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
               </div>
                 <input name="" v-model="user.username" class="form-control" placeholder="Username" type="text" >
-            </div> <!-- form-group// -->
+            </div> 
             
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
-                <input v-model="user.password" class="form-control" placeholder="Create password" type="password" >
-            </div> <!-- form-group// -->
+                <input v-model="user.password" class="form-control" placeholder="Password" type="password" >
+            </div> 
                                                  
-            <div class="form-group">
-                <button v-on:click="login()" class="btn btn-primary btn-block"> Login  </button>
-            </div> <!-- form-group// -->      
-            <p class="text-center">Are you not registered? <a href="">Sign up</a> </p>                                                                 
-        </form>
+          </form>  
+          <button v-on:click="login()" type="submit" class="btn btn-primary btn-block"> Login  </button>
+             
+          <p class="text-center">Are you not registered? <a href="">Sign up</a> </p>                                                                 
+        
         </article>
-        </div> <!-- card.// -->
+        </div> 
         
     </div> 
 
@@ -39,10 +39,16 @@
 <script lang="js">
 
 import http from "../../router/http-common";
+import Vue from 'vue'
+import axios from "axios";
+import {state} from '../mainPage/MainPage'
+
 
   export default  {
     name: 'Login',
-    props: [],
+    props: [
+      
+    ],  
     mounted() {
 
     },
@@ -52,11 +58,13 @@ import http from "../../router/http-common";
           username: "",
           password: ""
         },
-        submitted: false
-
+        submitted: false,
+        //stateL: false,
+        stanje: false
       };
     },
     methods: {
+      
       login() {
         var data = {
           username: this.user.username,
@@ -65,9 +73,19 @@ import http from "../../router/http-common";
         };
 
         http
-          .post("/user/login", data)
-          .then(response => {
-            console.log(response.data);
+          .post("/token/generate-token", data)
+          .then(token => {
+            console.log("token sa back-a: "+token.data.token);
+            
+            this.$cookie.set('token', token.data.token, 1);
+            var tokenn  = this.$cookie.get('token')
+            console.log(tokenn +" oooo");
+            
+            axios.defaults.headers.common['Authorization'] = 'Bearer '+tokenn;
+           
+            this.state=false;
+            this.$router.push({ path: '/mainpage'});
+            
           })
           .catch(e => {
             console.log(e);

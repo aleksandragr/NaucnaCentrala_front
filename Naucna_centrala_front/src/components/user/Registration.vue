@@ -2,7 +2,7 @@
 
     <div class="container">
         
-        <p>kkk</p>
+       
         <div class="card bg-light">
         <article class="card-body mx-auto" style="max-width: 400px;">
           <h4 class="card-title mt-3 text-center">Create Account</h4>
@@ -37,33 +37,45 @@
                   <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                 </div>
                   <input name="" v-model="user.email" class="form-control" placeholder="Email address" type="email">
-              </div> <!-- form-group// -->
+              </div> 
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
               </div>
                 <input name="" v-model="user.username" class="form-control" placeholder="Username" type="text" >
-            </div> <!-- form-group// -->
+            </div> 
             
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
                 <input v-model="user.password" class="form-control" placeholder="Create password" type="password" >
-            </div> <!-- form-group// -->
+            </div> 
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
             </div>
-                <input v-model="user.confirmP"class="form-control" placeholder="Repeat password" type="password">
-            </div> <!-- form-group// -->                                      
-            <div class="form-group">
-                <button v-on:click="registration()" class="btn btn-primary btn-block"> Create Account  </button>
-            </div> <!-- form-group// -->      
-            <p class="text-center">Have an account? <a href="">Log In</a> </p>                                                                 
-        </form>
+                <input v-model="user.confirmP" class="form-control" placeholder="Repeat password" type="password">
+            </div> 
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+              </div>
+              <select class="select" @change="handleChange" id="exampleFormControlSelect1" >
+                  <option selected hidden>Select role</option>
+                  <option value="1" data-foo="1">User</option>
+                  <option value="2" data-foo="2">Author</option>
+                  
+                </select>
+            </div>                                     
+          </form>    
+          
+          <button v-on:click="registration()" class="btn btn-primary btn-block"> Create account  </button>
+          
+          <p class="text-center">Have an account? <a href="">Log In</a> </p>                                                                 
+        
         </article>
-        </div> <!-- card.// -->
+        </div> 
         
     </div> 
 
@@ -89,10 +101,13 @@ import http from "../../router/http-common";
           email: "",
           username: "",
           password: "",
-          confirmP: ""
+          confirmP: "",
+          roles: "",
+          
 
         },
-        submitted: false
+        submitted: false,
+        idrole: ""
       };
     },
     methods: {
@@ -105,20 +120,35 @@ import http from "../../router/http-common";
           email: this.user.email,
           username: this.user.username,
           password: this.user.password,
-          confirmP: this.user.confirmP
+          confirmP: this.user.confirmP,
+          roles: [
+            {
+              "id": this.idrole
+            }
+          ]
         };
-
+        
         http
-          .post("/user/sign-up", data)
-          .then(response => {
-            console.log(response.data);
+          .post("/user/sign-up", data, console.log("zahtev")/*, {"Authorization": "Bearer "+ this.$cookie.get('token')}*/)
+          .then(user => {
+            
+            this.$router.push({ path: '/mainpage/login'});
+
           })
           .catch(e => {
-            console.log(e);
+            console.log("Neuspesna registracija");
           });
 
+        
         this.submitted=true;
-      }
+        
+      },
+      handleChange(e) {
+        if(e.target.options.selectedIndex > -1) {
+            this.idrole = e.target.options[e.target.options.selectedIndex].dataset.foo
+        }
+    }
+      
     },
     computed: {
 
@@ -150,6 +180,9 @@ import http from "../../router/http-common";
     z-index: 1;
 }
 
-
+.select{
+  width: 7cm;
+  height: 1cm;
+}
 
 </style>
