@@ -182,7 +182,7 @@ import http from "../../router/http-common";
 
 .select{
   width: 7cm;
-  height: 1cm;
+  height: 0.9cm;
 }
 
 </style>
