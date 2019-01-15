@@ -158,7 +158,7 @@ import http from "../../router/http-common";
 
 <style scoped lang="scss">
 
-  .divider-text {
+.divider-text {
     position: relative;
     text-align: center;
     margin-top: 15px;
@@ -183,6 +183,10 @@ import http from "../../router/http-common";
 .select{
   width: 7cm;
   height: 0.9cm;
+}
+
+.container{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 </style>

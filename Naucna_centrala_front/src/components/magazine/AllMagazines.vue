@@ -1,7 +1,8 @@
 <template lang="html">
   
   <div class="row">
-    <div class="col-lg-6" style="background-color: rgb(248, 248, 248)">
+    <!--style="background-color: rgb(248, 248, 248)"-->
+    <div class="col-lg-6" >
       <br>
       <h1 style="color: rgb(101, 119, 158); font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">All the magazines are here ! Find your own !</h1>
       <br>
@@ -27,14 +28,14 @@
       </table>
     </div>
 
-    <div class="col-lg-6" style="background-color: rgb(235, 112, 112)">
+    <div class="col-lg-6" style="">
       <div v-if="show===true">
         <AddLabor></AddLabor>
       </div>
 
       <div v-if="process===true">
         <p class="p">MORATE DA IZVRSITE PROCES UPLATE CLANARINE !</p>
-        <button style="margin-left: 8cm;" class="btn btn-info" >START</button>
+        <button v-on:click="payment()" style="margin-left: 8cm;" class="btn btn-info" >START</button>
       </div>
 
     </div>
@@ -60,7 +61,8 @@ import AddLabor from "./AddLabor";
       return {
         items: null,
         show: false,
-        process: false
+        process: false,
+        idMag: null
       }
     },
 
@@ -70,9 +72,14 @@ import AddLabor from "./AddLabor";
         
         
         http       
-          .get("/magazine/findAll")
+          .get("/magazine/findAll",{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
           .then(response => {
             this.items=response.data;
+            
           })
           .catch(e => {
             console.log(e);
@@ -80,11 +87,18 @@ import AddLabor from "./AddLabor";
       },
       addLabor(id){
         console.log(id);
-
+        this.idMag=id;
+        
+        
         http       
-          .post("/magazine/checkMembership/"+id)
+          .get("/magazine/checkMembership/" + id,{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
           .then(response => {
-            if(response.data=="ok" || response.data=="ima_clanarinu"){
+            console.log(response.data);
+            if(response.data=="validmembershipfee" || response.data=="noopenaccess"){
               this.show=true;
               this.process=false;
             }else{
@@ -96,6 +110,24 @@ import AddLabor from "./AddLabor";
             console.log(e);
           });
 
+      },
+      payment(){
+
+        http
+          .get("paymentobj/paymentOfMF/"+this.idMag,{
+            headers:{
+                Authorization: 'Bearer '+this.$cookie.get('token') 
+            }
+
+          })
+          .then(response => {
+            
+              window.location.href="http://localhost:3000/id="+response.data;
+            
+          })
+          .catch(e => {
+            console.log(e);
+          })
       }
     },
     beforeMount(){
@@ -113,7 +145,7 @@ import AddLabor from "./AddLabor";
 
   .text{
     margin-right: 10cm;
-    color: rgb(112, 131, 172);
+    /*color: rgb(112, 131, 172);*/
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   }
 
@@ -127,7 +159,7 @@ import AddLabor from "./AddLabor";
 
   .p{
     margin-top: 3cm;
-    color: rgb(58, 72, 102);
+    /*color: rgb(58, 72, 102);*/
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 0.8cm;
   }

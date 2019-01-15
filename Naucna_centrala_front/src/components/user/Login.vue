@@ -101,5 +101,9 @@ import {state} from '../mainPage/MainPage'
 </script>
 
 <style scoped lang="scss">
+
+.container{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
   
 </style>

@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div>
-    <b-navbar toggleable="md" type="dark" variant="info">
+    <b-navbar toggleable="md" type="dark" variant="info" class="nav">
 
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
       
@@ -84,5 +84,10 @@ Vue.use(Navbar);
 </script>
 
 <style scoped lang="scss">
+
+.nav{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 0.5cm;
+}
  
 </style>
