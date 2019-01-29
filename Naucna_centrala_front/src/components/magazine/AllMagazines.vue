@@ -114,7 +114,7 @@ import AddLabor from "./AddLabor";
       payment(){
 
         http
-          .get("paymentobj/paymentOfMF/"+this.idMag,{
+          .get("payment/createpo/"+this.idMag,{
             headers:{
                 Authorization: 'Bearer '+this.$cookie.get('token') 
             }
@@ -122,7 +122,7 @@ import AddLabor from "./AddLabor";
           })
           .then(response => {
             
-              window.location.href="http://localhost:3000/id="+response.data;
+              window.location.href=response.data;
             
           })
           .catch(e => {
