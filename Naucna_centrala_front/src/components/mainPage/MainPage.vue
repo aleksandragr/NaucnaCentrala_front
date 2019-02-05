@@ -10,16 +10,17 @@
         <b-collapse is-nav id="nav_collapse">
       
           <b-navbar-nav>
-              <router-link class="nav-link" to="/mainpage/magazines">All magazines</router-link>
+              <router-link class="nav-link" to="/mainpage/magazines" v-if="state===true">All magazines</router-link>
             
           </b-navbar-nav>
       
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
 
-            <router-link class="nav-link" to="/mainpage/registration">Registration</router-link>
-            <router-link class="nav-link" to="/mainpage/login">Login</router-link>
-            <b-nav-item v-on:click="logout()" v-if="state">Logout</b-nav-item>
+            <router-link class="nav-link" to="/mainpage/registration" v-if="state===false">Registration</router-link>
+            <router-link class="nav-link" to="/mainpage/login" v-if="state===false">Login</router-link>
+            <router-link class="nav-link" to="/mainpage/profile" v-if="state===true"><i class='fas fa-user-alt'></i> Profile</router-link>
+            <b-nav-item v-on:click="logout()" v-if="state===true"><i class='fas fa-user-alt-slash'></i> Logout</b-nav-item>
             
           </b-navbar-nav>
       
@@ -55,30 +56,27 @@ Vue.use(Navbar);
     },
     data() {
       return {
-        state:true
+        state:false
       }
     },
     methods: {
       logout(){
-        console.log("logout");    
+           
         this.$cookie.delete('token');     
         delete axios.defaults.headers.common["Authorization"];
-        
-      },
-      getUnits: function(){
-        console.log(this.state+ "main");
-        
-      },
-      pozovi(){
-        console.log( Loginn.data.stanje + " aaaaaa");
+        location.reload();
+        window.location.href="http://localhost:8082/#/mainpage";
       }
 
     },
     beforeMount(){
-      this.getUnits()
-    },
-    computed: {
-
+      
+      if(this.$cookie.get('token')!=null){
+        this.state=true;
+      }
+      else{
+        this.state=false;
+      }
     }
 }
 </script>
@@ -88,6 +86,7 @@ Vue.use(Navbar);
 .nav{
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 0.5cm;
+  
 }
  
 </style>

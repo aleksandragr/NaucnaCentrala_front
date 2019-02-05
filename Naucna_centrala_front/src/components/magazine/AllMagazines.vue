@@ -4,7 +4,7 @@
     <!--style="background-color: rgb(248, 248, 248)"-->
     <div class="col-lg-6" >
       <br>
-      <h1 style="color: rgb(101, 119, 158); font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">All the magazines are here ! Find your own !</h1>
+      <h1 style="color: rgb(111, 189, 235); font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">All the magazines are here ! Find your own !</h1>
       <br>
 
       <table style="width:100%" class="table">
@@ -13,29 +13,53 @@
           <th>Name</th>
           <th>ISSN number</th>
           <th>Main Editor</th>
-          <th></th>
+          <th>Price</th>
         </tr>
         <tr v-for="item, key in items">
           <td>{{++key}}</td>
           <td>{{item.name}}</td>
-          <td>{{item.ISSNnumber}}</td>
+          <td>{{item.issnnumber}}</td>
           <td>{{item.mainEditor.name}}</td>
+          <td>{{item.amountmag}}</td>
           <td>
-            <button v-on:click="addLabor(item.id)">Add</button>
+            <button class="btn btn-warning" v-on:click="addLabor(item.id)">Add</button>
+          </td>
+          <td>
+            <button class="btn btn-success" v-on:click="seelabors(item.id)">Labors</button>
+          </td>
+          <td>
+            <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
           </td>
         </tr>
 
       </table>
     </div>
 
-    <div class="col-lg-6" style="">
+    <div class="col-lg-6" >
       <div v-if="show===true">
         <AddLabor></AddLabor>
       </div>
 
       <div v-if="process===true">
-        <p class="p">MORATE DA IZVRSITE PROCES UPLATE CLANARINE !</p>
-        <button v-on:click="payment()" style="margin-left: 8cm;" class="btn btn-info" >START</button>
+        <p class="p">MORATE DA IZVRSITE PROCES UPLATE CLANARINE U IZNOSU OD 1EUR !</p>
+        <button v-on:click="payment('clanarina',0)" style="margin-left: 8cm;" class="btn btn-info" >START</button>
+      </div>
+
+      <div v-if="laborTrue===true">
+        
+          <div class="radovi">
+
+            <p v-for="labor,key in labors">
+              {{++key}}. {{labor.heading}} 
+              <br>
+              Price: {{labor.amountlabor}}EUR
+            
+              <button class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
+            </p>
+            
+          </div>
+          
+
       </div>
 
     </div>
@@ -59,10 +83,13 @@ import AddLabor from "./AddLabor";
     },
     data() {
       return {
-        items: null,
+        
+        items: [],
         show: false,
         process: false,
-        idMag: null
+        idMag: null,
+        laborTrue: false,
+        labors: []
       }
     },
 
@@ -86,9 +113,9 @@ import AddLabor from "./AddLabor";
           });
       },
       addLabor(id){
-        console.log(id);
-        this.idMag=id;
         
+        this.idMag=id;
+        this.laborTrue=false;
         
         http       
           .get("/magazine/checkMembership/" + id,{
@@ -101,6 +128,7 @@ import AddLabor from "./AddLabor";
             if(response.data=="validmembershipfee" || response.data=="noopenaccess"){
               this.show=true;
               this.process=false;
+              
             }else{
               this.process=true;
               this.show=false;
@@ -111,10 +139,14 @@ import AddLabor from "./AddLabor";
           });
 
       },
-      payment(){
-
+      payment(type,id){
+        console.log(id+ "iddddddddddddddddd");
+        if(type=="magazin" || type=="rad"){
+          this.idMag=id;
+        }
+        
         http
-          .get("payment/createpo/"+this.idMag,{
+          .get("payment/createpo/"+this.idMag+"/"+type,{
             headers:{
                 Authorization: 'Bearer '+this.$cookie.get('token') 
             }
@@ -128,6 +160,29 @@ import AddLabor from "./AddLabor";
           .catch(e => {
             console.log(e);
           })
+      },
+      seelabors(id){
+        
+        this.laborTrue=true;
+        this.show=false;
+        this.process=false;
+
+        http
+          .get("labor/getLabors/"+id,{
+            headers:{
+                Authorization: 'Bearer '+this.$cookie.get('token') 
+            }
+
+          })
+          .then(response => {
+            
+              this.labors=response.data;
+            
+          })
+          .catch(e => {
+            console.log(e);
+          })
+
       }
     },
     beforeMount(){
@@ -145,7 +200,6 @@ import AddLabor from "./AddLabor";
 
   .text{
     margin-right: 10cm;
-    /*color: rgb(112, 131, 172);*/
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   }
 
@@ -154,13 +208,31 @@ import AddLabor from "./AddLabor";
   }
 
   .table{
-    text-size-adjust: 0.3cm;
+    font-size: 0.5cm;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+  .table1{
+    font-size: 0.5cm;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 5cm;
+    
   }
 
   .p{
-    margin-top: 3cm;
+    margin-top: 5cm;
     /*color: rgb(58, 72, 102);*/
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 0.8cm;
+  }
+
+  p{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 0.5cm;
+    margin-top:1cm;
+  }
+
+  .radovi{
+    margin-top: 4.7cm;
   }
 </style>

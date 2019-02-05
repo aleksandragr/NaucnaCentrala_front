@@ -59,7 +59,6 @@ import {state} from '../mainPage/MainPage'
           password: ""
         },
         submitted: false,
-        //stateL: false,
         stanje: false
       };
     },
@@ -75,16 +74,15 @@ import {state} from '../mainPage/MainPage'
         http
           .post("/token/generate-token", data)
           .then(token => {
-            console.log("token sa back-a: "+token.data.token);
-            
+                       
             this.$cookie.set('token', token.data.token, 1);
             var tokenn  = this.$cookie.get('token')
-            console.log(tokenn +" oooo");
             
             axios.defaults.headers.common['Authorization'] = 'Bearer '+tokenn;
            
             this.state=false;
             this.$router.push({ path: '/mainpage'});
+            location.reload();
             
           })
           .catch(e => {
