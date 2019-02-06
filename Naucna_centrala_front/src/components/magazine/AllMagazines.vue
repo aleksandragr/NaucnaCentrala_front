@@ -20,7 +20,7 @@
           <td>{{item.name}}</td>
           <td>{{item.issnnumber}}</td>
           <td>{{item.mainEditor.name}}</td>
-          <td>{{item.amountmag}}</td>
+          <td>{{item.amountmag}}EUR</td>
           <td>
             <button class="btn btn-warning" v-on:click="addLabor(item.id)">Add</button>
           </td>
@@ -210,6 +210,7 @@ import AddLabor from "./AddLabor";
   .table{
     font-size: 0.5cm;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-top: 1cm;
   }
 
   .table1{
@@ -233,6 +234,6 @@ import AddLabor from "./AddLabor";
   }
 
   .radovi{
-    margin-top: 4.7cm;
+    margin-top: 3.5cm;
   }
 </style>

@@ -10,7 +10,7 @@
             <button class="dugme btn btn-outline-warning" v-on:click="podaci()">Informations about user</button>
             <button class="dugme btn btn-outline-warning" v-on:click="podaci2()">Membership Fee</button>
             <button class="dugme btn btn-outline-warning" v-on:click="podaci3()">Transactions</button>
-          
+            <button class="dugme btn btn-outline-warning" v-on:click="podaci4()">Purchased magazines and labors</button>
         </nav>
       </div>
 
@@ -69,7 +69,7 @@
 
         <div  v-if="transactions===true">
 
-          <div v-if="trans===true">
+          <div v-if="trans===true" class="tabela">
             <h2 align="center">Your transactions</h2>
 
             <table class="table">
@@ -99,6 +99,50 @@
 
 
         </div>
+
+
+        <div v-if="kupljeno===true" class="tabela">
+
+          <h2 align="center">Your purchesed magazines and labors</h2>
+
+          <table class="table">
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>PDF</th>
+            </tr>
+            <tr v-for="k, key in kupljeniP">
+              <th>{{++key}}</th>
+              <th>{{k.name}}</th>
+              <th>{{k.type}}</th>
+              <th><a :href="k.downloadurl">Download</a></th>
+            </tr>
+          </table>
+
+          <!--
+          <div class="container">
+            <div class="large-12 medium-12 small-12 cell">
+              <label>File
+                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+              </label>
+                <button v-on:click="submitFile()">Submit</button>
+            </div>
+          </div>
+      
+            <div id="singleFileUploadSuccess">
+              <button v-on:click="downloadf()">sssss</button> 
+          </div>
+        -->
+
+        </div>
+
+
+
+
+
+
+
       </div>
 
     </div>
@@ -123,6 +167,7 @@ import http from "../../router/http-common";
         transactions: false,
         clanarina: true,
         trans: true,
+        kupljeno: false,
         korisnik: {
           name: "",
           surname: "",
@@ -131,7 +176,9 @@ import http from "../../router/http-common";
           endDate: "",
           price: ""
         },
-        transakcije: []
+        transakcije: [],
+        kupljeniP: [],
+        file: '',
       }
     },
     methods: {
@@ -140,6 +187,7 @@ import http from "../../router/http-common";
         this.information=true;
         this.membership=false;
         this.transactions=false;
+        this.kupljeno=false;
 
         http       
           .get("/user/getInfo",{
@@ -163,6 +211,7 @@ import http from "../../router/http-common";
         this.information=false;
         this.membership=true;
         this.transactions=false;
+        this.kupljeno=false;
 
         http       
           .get("/user/getInfo",{
@@ -194,6 +243,7 @@ import http from "../../router/http-common";
         this.information=false;
         this.membership=false;
         this.transactions=true;
+        this.kupljeno=false;
         
         http       
           .get("/payment/getTransaction",{
@@ -217,7 +267,65 @@ import http from "../../router/http-common";
           });
 
 
+      },
+      podaci4(){
+        this.information=false;
+        this.membership=false;
+        this.transactions=false;
+        this.kupljeno=true;
+
+
+
+        http       
+          .get("/labor/getLaborsMagazines",{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
+          .then(response => {
+            
+            this.kupljeniP=response.data;
+            
+          })
+          .catch(e => {
+            console.log(e);
+          });
+        
+      },
+
+      handleFileUpload(){
+        this.file = this.$refs.file.files[0];
+      },
+
+      submitFile(){
+        let formData = new FormData();
+        formData.append('file', this.file);
+        http
+          .post("/dbfile/uploadfile", formData,{
+            headers: {
+              Authorization: 'Bearer ' + this.$cookie.get('token'),
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then(response =>{
+           // singleFileUploadSuccess.innerHTML = "<button v-on:click=\"downloadf()\">aaaaa</button>"
+            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.data.fileDownloadUri + "' target='_blank'>" + response.data.fileDownloadUri + "</a></p>";
+            singleFileUploadSuccess.style.display = "block";
+            console.log("URI: " + response.data.fileDownloadUri);  
+          })
+          .catch(e=> {
+            console.log(e);
+          })
+
+
       }
+
+
+
+
+
+
+
     },
     computed: {
 
@@ -278,6 +386,7 @@ input{
 
 .velikidiv{
   margin-left: 1cm;
+  margin-top: 2cm;
 }
 
 .clan1{
@@ -301,6 +410,11 @@ input{
 
 .dugme{
   width: 5cm;
+  margin-top: 0.5cm;
+}
+
+.tabela{
+  margin-top: 1.3cm;
 }
 
 
