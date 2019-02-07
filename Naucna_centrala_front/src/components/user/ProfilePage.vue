@@ -36,9 +36,51 @@
 
         </div>
 
-
+        <!-- Membership fee-->
         <div v-if="membership===true" >
           
+
+          <div class="row" style="margin-top: 1.7cm; margin-left: -2cm;"> 
+            <div class="col-md-4" style="margin-top: 1.7cm; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 0.5cm;">
+              If you want to buy a membership fee, first you have to select the magazine !
+              <br>
+              <select class="select" @change="handleChange" id="exampleFormControlSelect1" >
+                <option selected hidden>Select magazine</option>
+                <option v-for="i in items" value="'i.id'" :data-foo="i.id">{{i.name}}</option>
+              </select>
+              <br>
+              <br>
+              <button style="margin-left: 1.7cm; width: 2cm;" class="btn btn-info" v-on:click="payment('clanarina')">Buy</button>
+              
+            </div>
+
+            <div class="col-md-8" >
+              <h2 align="center">Your membership fees</h2>
+              <table class="table">
+                <tr>
+                  <th></th>
+                  <th>Magazine</th>
+                  <th>Start date</th>
+                  <th>End date</th>
+              
+                </tr>
+                <tr v-for="l, key in listaclanarina">
+                  <th>{{++key}}</th>
+                  <th>{{l.magazine.name}}</th>
+                  <th>{{l.startDate}}</th>
+                  <th>{{l.endDate}}</th>
+                  
+                  
+                </tr>
+              </table>
+            </div>
+
+          </div>
+
+
+          <!--
+
+
           <div class="clan1" v-if="clanarina===false">
             You don't have active membership fee !
           </div>
@@ -63,9 +105,13 @@
     
           </div>
 
+-->
+
+
+
         </div>
 
-
+        <!-- ///////////////////////////////////////////-->
 
         <div  v-if="transactions===true">
 
@@ -179,6 +225,9 @@ import http from "../../router/http-common";
         transakcije: [],
         kupljeniP: [],
         file: '',
+        listaclanarina: [],
+        items: [],
+        idmag: null
       }
     },
     methods: {
@@ -214,27 +263,36 @@ import http from "../../router/http-common";
         this.kupljeno=false;
 
         http       
-          .get("/user/getInfo",{
+          .get("/user/getMSF",{
               headers: {
                 Authorization: 'Bearer '+this.$cookie.get('token')
               }
           })
           .then(response => {
-            if(response.data.startDate==null & response.data.endDate==null){
-              this.clanarina=false;
-            }
-            else{
-              this.clanarina=true;
-              this.korisnik.startDate=response.data.startDate;
-              this.korisnik.endDate=response.data.endDate;
-              this.korisnik.price=response.data.price;
-              
-            }
-            console.log(this.clanarina);
+            this.listaclanarina=response.data;
+
           })
           .catch(e => {
             console.log(e);
           });
+
+
+        http       
+          .get("/magazine/findAll",{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
+          .then(response => {
+            this.items=response.data;
+            
+          })
+          .catch(e => {
+            console.log(e);
+          });
+
+
+        
 
 
 
@@ -318,6 +376,32 @@ import http from "../../router/http-common";
           })
 
 
+      },
+      handleChange(e) {
+        if(e.target.options.selectedIndex > -1) {
+            this.idmag = e.target.options[e.target.options.selectedIndex].dataset.foo
+        }
+      },
+      payment(type){
+        
+        if(this.idmag!=null){
+          http
+          .get("payment/createpo/"+this.idmag+"/"+type,{
+            headers:{
+                Authorization: 'Bearer '+this.$cookie.get('token') 
+            }
+
+          })
+          .then(response => {
+            
+              window.location.href=response.data;
+            
+          })
+          .catch(e => {
+            console.log(e);
+          })
+        }
+        
       }
 
 
@@ -394,6 +478,7 @@ input{
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1cm;
   margin-left: 1cm;
+  margin-top: 2cm;
 }
 
 .clan2{
@@ -405,7 +490,7 @@ input{
 
 .table{
   font-size: 0.4cm;
-  margin-left: -1cm;
+  margin-left: -0.5cm;
 }
 
 .dugme{
@@ -416,6 +501,8 @@ input{
 .tabela{
   margin-top: 1.3cm;
 }
+
+
 
 
 </style>

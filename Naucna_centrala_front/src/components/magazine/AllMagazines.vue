@@ -19,16 +19,28 @@
           <td>{{++key}}</td>
           <td>{{item.name}}</td>
           <td>{{item.issnnumber}}</td>
-          <td>{{item.mainEditor.name}}</td>
-          <td>{{item.amountmag}}EUR</td>
+          <td>{{item.mainEditor}}</td>
+          <td>{{item.amount}}EUR</td>
           <td>
-            <button class="btn btn-warning" v-on:click="addLabor(item.id)">Add</button>
+            <div v-if="item.role==='author'">
+              <button class="btn btn-warning" v-on:click="addLabor(item.id,item.validmembership,item.paymentMethod)">Add</button>
+            </div>
           </td>
           <td>
             <button class="btn btn-success" v-on:click="seelabors(item.id)">Labors</button>
           </td>
           <td>
-            <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
+            <div v-if="item.paymentMethod==='no open-access'">
+              <div v-if="item.validmembership==='invalid'">
+                <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
+              </div>
+              <div v-if="item.validmembership==='valid'">
+                  <a :href="item.url">Download</a>
+              </div>
+            </div>
+            <div v-if="item.paymentMethod==='open-access'">
+              <a :href="item.url">Download</a>
+            </div>
           </td>
         </tr>
 
@@ -41,7 +53,7 @@
       </div>
 
       <div v-if="process===true">
-        <p class="p">MORATE DA IZVRSITE PROCES UPLATE CLANARINE U IZNOSU OD 1EUR !</p>
+        <p class="p">MORATE DA IZVRSITE PROCES UPLATE CLANARINE U IZNOSU OD 4EUR !</p>
         <button v-on:click="payment('clanarina',0)" style="margin-left: 8cm;" class="btn btn-info" >START</button>
       </div>
 
@@ -49,13 +61,25 @@
         
           <div class="radovi">
 
-            <p v-for="labor,key in labors">
+            <div v-for="labor,key in labors">
               {{++key}}. {{labor.heading}} 
               <br>
-              Price: {{labor.amountlabor}}EUR
-            
-              <button class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
-            </p>
+              <div>
+                <div v-if="labor.paymentMethod==='no open-access'">
+                  <div v-if="labor.validmembership==='invalid'">
+                    Price: {{labor.amount}}EUR
+                    <button  class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
+                  </div>
+                  <div v-if="labor.validmembership==='valid'">
+                    <a :href="labor.url">Download</a>
+                  </div>
+                </div>
+                <div v-if="labor.paymentMethod==='open-access'">
+                  <a :href="labor.url">Download</a>
+                </div>
+              </div>
+              <br>
+            </div>
             
           </div>
           
@@ -112,35 +136,30 @@ import AddLabor from "./AddLabor";
             console.log(e);
           });
       },
-      addLabor(id){
+      addLabor(id,valid,method){
         
         this.idMag=id;
         this.laborTrue=false;
         
-        http       
-          .get("/magazine/checkMembership/" + id,{
-              headers: {
-                Authorization: 'Bearer '+this.$cookie.get('token')
-              }
-          })
-          .then(response => {
-            console.log(response.data);
-            if(response.data=="validmembershipfee" || response.data=="noopenaccess"){
-              this.show=true;
-              this.process=false;
-              
-            }else{
-              this.process=true;
-              this.show=false;
-            }
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        if(method=="no open-access"){
+          this.show=true;
+          this.process=false;   
+        }else if("open-access"){
+          if(valid=="valid"){
+            this.show=true;
+            this.process=false; 
+          }
+          else{
+            this.show=false;
+            this.process=true; 
+          }
+        }
+        
+        
 
       },
       payment(type,id){
-        console.log(id+ "iddddddddddddddddd");
+        
         if(type=="magazin" || type=="rad"){
           this.idMag=id;
         }
@@ -235,5 +254,7 @@ import AddLabor from "./AddLabor";
 
   .radovi{
     margin-top: 3.5cm;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 0.5cm;
   }
 </style>
