@@ -32,7 +32,12 @@
           <td>
             <div v-if="item.paymentMethod==='no open-access'">
               <div v-if="item.validmembership==='invalid'">
-                <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
+                <div v-if="item.bought==='no'">
+                  <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
+                </div>
+                <div v-else>
+                  <a :href="item.url">Download</a>
+                </div>
               </div>
               <div v-if="item.validmembership==='valid'">
                   <a :href="item.url">Download</a>
@@ -67,8 +72,13 @@
               <div>
                 <div v-if="labor.paymentMethod==='no open-access'">
                   <div v-if="labor.validmembership==='invalid'">
-                    Price: {{labor.amount}}EUR
-                    <button  class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
+                    <div v-if="labor.bought==='no'">
+                      Price: {{labor.amount}}EUR
+                      <button  class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
+                    </div>
+                    <div v-else>
+                      <a :href="labor.url">Download</a>
+                    </div>
                   </div>
                   <div v-if="labor.validmembership==='valid'">
                     <a :href="labor.url">Download</a>
