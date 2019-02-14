@@ -1,17 +1,20 @@
 <template lang="html">
-  <div>
+  <div v-if="provera===true">
     <header>
       <h2>User profile</h2>
     </header>
     <div class="row">
       <div class="col-lg-3">
         <nav>
+          <div >
+
           
             <button class="dugme btn btn-outline-warning" v-on:click="podaci()">Informations about user</button>
             <button class="dugme btn btn-outline-warning" v-on:click="podaci2()">Membership Fee</button>
             <button class="dugme btn btn-outline-warning" v-on:click="podaci3()">Transactions</button>
             <button class="dugme btn btn-outline-warning" v-on:click="podaci4()">Purchased magazines and labors</button>
-        </nav>
+          </div>
+          </nav>
       </div>
 
       <div class="prikaz col-lg-9" >
@@ -77,35 +80,6 @@
 
           </div>
 
-
-          <!--
-
-
-          <div class="clan1" v-if="clanarina===false">
-            You don't have active membership fee !
-          </div>
-
-          <div class="row velikidiv" v-if="clanarina===true">
-          
-              <div class="div1 col-md-3">
-                <label >Start date:</label>
-                
-                <label >End date:</label>
-                
-                <label >Price:</label>
-              </div>
-    
-              <div class="col-md-2">
-                <input v-model="korisnik.startDate" disabled/>
-                
-                <input v-model="korisnik.endDate" disabled/>
-                
-                <input v-model="korisnik.price" disabled/>
-              </div>
-    
-          </div>
-
--->
 
 
 
@@ -204,7 +178,7 @@ import http from "../../router/http-common";
     name: 'profile-page',
     props: [],
     mounted() {
-
+      this.proveraRole();
     },
     data() {
       return {
@@ -227,10 +201,38 @@ import http from "../../router/http-common";
         file: '',
         listaclanarina: [],
         items: [],
-        idmag: null
+        idmag: null,
+        provera: ""
       }
     },
     methods: {
+
+      proveraRole(){
+
+        http       
+          .get("/editorreviewer/whoIsLoggedIn",{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
+          .then(response => {
+            
+            if(response.data=='editor'){
+              
+              this.provera=false;
+            }
+            else{
+              this.provera=true;
+            }
+            
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      },
+
+
+
       podaci(){
         
         this.information=true;

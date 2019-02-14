@@ -11,7 +11,7 @@
       
           <b-navbar-nav>
               <router-link class="nav-link" to="/mainpage/magazines" v-if="state===true">All magazines</router-link>
-            
+              <router-link class="nav-link" to="/mainpage/search" v-if="state===true">Search</router-link>
           </b-navbar-nav>
       
           <!-- Right aligned nav items -->

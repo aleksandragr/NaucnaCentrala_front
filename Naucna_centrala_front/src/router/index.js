@@ -5,7 +5,7 @@ import Login from '../components/user/Login'
 import MainPage from '../components/mainPage/MainPage';
 import AllMagazines from '../components/magazine/AllMagazines';
 import ProfilePage from '../components/user/ProfilePage'
-
+import Search from '../components/labor/Search'
 import VueCookie from "vue-cookie";
 
 Vue.use(VueCookie);
@@ -22,7 +22,8 @@ export default new Router({
         { path: 'login', component: Login},
         { path: 'registration', component: Registration},
         { path: 'magazines', component: AllMagazines},
-        { path: 'profile', component: ProfilePage}
+        { path: 'profile', component: ProfilePage},
+        { path: 'search', component: Search}
       ]
     }
     

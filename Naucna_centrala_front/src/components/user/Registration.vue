@@ -107,7 +107,7 @@ import http from "../../router/http-common";
 
         },
         submitted: false,
-        idrole: ""
+        idrole: null
       };
     },
     methods: {
@@ -127,7 +127,7 @@ import http from "../../router/http-common";
             }
           ]
         };
-        
+        console.log(data.roles);
         http
           .post("/user/sign-up", data, console.log("zahtev")/*, {"Authorization": "Bearer "+ this.$cookie.get('token')}*/)
           .then(user => {

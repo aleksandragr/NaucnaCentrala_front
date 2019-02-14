@@ -30,22 +30,28 @@
             <button class="btn btn-success" v-on:click="seelabors(item.id)">Labors</button>
           </td>
           <td>
-            <div v-if="item.paymentMethod==='no open-access'">
-              <div v-if="item.validmembership==='invalid'">
-                <div v-if="item.bought==='no'">
-                  <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
-                </div>
-                <div v-else>
-                  <a :href="item.url">Download</a>
-                </div>
-              </div>
-              <div v-if="item.validmembership==='valid'">
-                  <a :href="item.url">Download</a>
-              </div>
+            <div v-if="item.role==='editor'">
+                <a :href="item.url">Download</a>
             </div>
-            <div v-if="item.paymentMethod==='open-access'">
-              <a :href="item.url">Download</a>
+            <div v-else>
+                <div v-if="item.paymentMethod==='no open-access'">
+                    <div v-if="item.validmembership==='invalid'">
+                      <div v-if="item.bought==='no'">
+                        <button class="btn btn-info" v-on:click="payment('magazin',item.id)">Buy</button>
+                      </div>
+                      <div v-else>
+                        <a :href="item.url">Download</a>
+                      </div>
+                    </div>
+                    <div v-if="item.validmembership==='valid'">
+                        <a :href="item.url">Download</a>
+                    </div>
+                </div>
+                <div v-if="item.paymentMethod==='open-access'">
+                    <a :href="item.url">Download</a>
+                </div>
             </div>
+            
           </td>
         </tr>
 
@@ -54,7 +60,7 @@
 
     <div class="col-lg-6" >
       <div v-if="show===true">
-        <AddLabor></AddLabor>
+        <AddLabor :idmag="idMag"></AddLabor>
       </div>
 
       <div v-if="process===true">
@@ -70,23 +76,29 @@
               {{++key}}. {{labor.heading}} 
               <br>
               <div>
-                <div v-if="labor.paymentMethod==='no open-access'">
-                  <div v-if="labor.validmembership==='invalid'">
-                    <div v-if="labor.bought==='no'">
-                      Price: {{labor.amount}}EUR
-                      <button  class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
-                    </div>
-                    <div v-else>
-                      <a :href="labor.url">Download</a>
-                    </div>
-                  </div>
-                  <div v-if="labor.validmembership==='valid'">
+                <div v-if="labor.role==='editor'">    
                     <a :href="labor.url">Download</a>
-                  </div>
                 </div>
-                <div v-if="labor.paymentMethod==='open-access'">
-                  <a :href="labor.url">Download</a>
+                <div v-else>
+                    <div v-if="labor.paymentMethod==='no open-access'">
+                        <div v-if="labor.validmembership==='invalid'">
+                          <div v-if="labor.bought==='no'">
+                            Price: {{labor.amount}}EUR
+                            <button  class="btn btn-info" v-on:click="payment('rad',labor.id)">Buy</button>
+                          </div>
+                          <div v-else>
+                            <a :href="labor.url">Download</a>
+                          </div>
+                        </div>
+                        <div v-if="labor.validmembership==='valid'">
+                          <a :href="labor.url">Download</a>
+                        </div>
+                    </div>
+                    <div v-if="labor.paymentMethod==='open-access'">
+                        <a :href="labor.url">Download</a>
+                    </div>
                 </div>
+                
               </div>
               <br>
             </div>
