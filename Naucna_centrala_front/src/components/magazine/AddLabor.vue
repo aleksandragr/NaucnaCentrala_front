@@ -13,7 +13,7 @@
               <div class="col-sm-2">
                   <label style="width: 200px; font-size: 21px;">Key terms:</label>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                   <input  class="form-control" style="width: 200px;" id="val"  type="text" placeholder="Key term">
               </div>
               <div class="col-sm-6">
@@ -27,7 +27,7 @@
           </div>
           <br>
           <div class="row">
-              <div div class="col-sm-3">
+              <div div class="col-sm-2">
                 <label for="exampleInputEmail1">Scientific area:</label>
               </div>
               <div div class="col-sm-9">
@@ -44,7 +44,7 @@
           </div>
 
           <div class="row">
-              <div class="col-sm-2">
+              <div class="col-sm-1">
                   <label style="width: 200px; font-size: 21px;">PDF</label>          
               </div>
               <div class="col-sm-8">
@@ -75,12 +75,12 @@ import http from "../../router/http-common";
     name: 'add-labor',
     props: ['idmag'],
     mounted() {
-      this.$watch('idmag', idmag => {
+      /*this.$watch('idmag', idmag => {
 
         this.getSca();
       }, {immediate:true})
-      
-      
+      */
+      this.getSca();
 
     },
     data() {
@@ -141,8 +141,11 @@ import http from "../../router/http-common";
 
             let formData = new FormData();
             formData.append('file', this.file);
+            let taskId = localStorage.getItem('noviTaskId');
+            let processId = localStorage.getItem('processId');
+            console.log(taskId + "   taskid kad se doda labor");
             http
-              .post("/labor/addPdfInLabor/"+res.data, formData,{
+              .post("/labor/addPdfInLabor/"+res.data+"/"+taskId+"/"+processId, formData,{
                 headers: {
                   Authorization: 'Bearer ' + this.$cookie.get('token'),
                   'Content-Type': 'multipart/form-data'
@@ -150,7 +153,22 @@ import http from "../../router/http-common";
               })
               .then(response =>{
               
+                http
+                    .get("/tasks/addtask/"+res.data,{
+                    headers: {
+                        Authorization: 'Bearer ' + this.$cookie.get('token'),
+                          'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(response =>{
+              
+                        
                 
+                 
+                    })
+                    .catch(e=> {
+                          console.log(e);
+                    })
                 
                  
               })
@@ -203,9 +221,10 @@ import http from "../../router/http-common";
       },
 
       getSca(){
-
+        var taskId=localStorage.getItem('noviTaskId');
+        console.log(taskId);
         http       
-          .get("/scientificArea/getSA/"+this.idmag,{
+          .get("/scientificArea/getSA/"+taskId,{
               headers: {
                 Authorization: 'Bearer '+this.$cookie.get('token')
               }
@@ -239,7 +258,8 @@ div{
 
 .glavni{
   margin-top: 3cm;
-  margin-left: 1cm;
+  margin-left: 7cm;
+  width: 25cm;
 }
 
 .select{

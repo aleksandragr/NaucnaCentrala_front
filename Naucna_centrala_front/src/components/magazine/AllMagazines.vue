@@ -60,7 +60,9 @@
 
     <div class="col-lg-6" >
       <div v-if="show===true">
-        <AddLabor :idmag="idMag"></AddLabor>
+        <!--<AddLabor :idmag="idMag"></AddLabor>-->
+        <p class="p">If you want to add a new labor, click the button below !</p>
+        <button v-on:click="gototasks()" style="margin-left: 8cm;" class="btn btn-info" >Add labor</button>
       </div>
 
       <div v-if="process===true">
@@ -141,6 +143,9 @@ import AddLabor from "./AddLabor";
 
     
     methods: {
+      gototasks(){
+        window.location.href="http://localhost:8082/#/mainpage/tasks";
+      },
       izlistajSve(){
         
         
@@ -176,6 +181,24 @@ import AddLabor from "./AddLabor";
             this.process=true; 
           }
         }
+
+        http       
+          .get("/magazine/checkMagazine/"+id+"/"+valid,{
+              headers: {
+                Authorization: 'Bearer '+this.$cookie.get('token')
+              }
+          })
+          .then(response => {
+            localStorage.setItem('taskId', response.data.taskId); 
+            localStorage.setItem('processId',response.data.processId);
+
+            //console.log(response.data+ "  taskid sa back-a");
+
+            //console.log(response.data.formFields[1].id + "    form fields")
+          })
+          .catch(e => {
+            console.log(e);
+          });
         
         
 
@@ -262,7 +285,7 @@ import AddLabor from "./AddLabor";
   }
 
   .p{
-    margin-top: 5cm;
+    margin-top: 6cm;
     /*color: rgb(58, 72, 102);*/
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 0.8cm;

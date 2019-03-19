@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="provera===true">
+  <div >
     <header>
       <h2>User profile</h2>
     </header>
@@ -10,9 +10,10 @@
 
           
             <button class="dugme btn btn-outline-warning" v-on:click="podaci()">Informations about user</button>
-            <button class="dugme btn btn-outline-warning" v-on:click="podaci2()">Membership Fee</button>
-            <button class="dugme btn btn-outline-warning" v-on:click="podaci3()">Transactions</button>
-            <button class="dugme btn btn-outline-warning" v-on:click="podaci4()">Purchased magazines and labors</button>
+            <!--<button class="dugme btn btn-outline-warning" v-on:click="mytasks()">My tasks</button>-->
+            <button v-if="provera===true" class="dugme btn btn-outline-warning" v-on:click="podaci2()">Membership Fee</button>
+            <button v-if="provera===true" class="dugme btn btn-outline-warning" v-on:click="podaci3()">Transactions</button>
+            <button v-if="provera===true" class="dugme btn btn-outline-warning" v-on:click="podaci4()">Purchased magazines and labors</button>
           </div>
           </nav>
       </div>
@@ -157,7 +158,9 @@
 
         </div>
 
-
+        <div v-if="tasks===true">
+          <Tasks></Tasks>
+        </div>
 
 
 
@@ -173,12 +176,16 @@
 <script lang="js">
 
 import http from "../../router/http-common";
+import Tasks from "./Tasks"
 
   export default  {
     name: 'profile-page',
     props: [],
     mounted() {
       this.proveraRole();
+    },
+    components: {
+      Tasks
     },
     data() {
       return {
@@ -202,10 +209,19 @@ import http from "../../router/http-common";
         listaclanarina: [],
         items: [],
         idmag: null,
-        provera: ""
+        provera: "",
+        tasks: false
       }
     },
     methods: {
+
+      mytasks(){
+        this.tasks=true;
+        this.information=false;
+        this.membership=false;
+        this.transactions=false;
+        this.kupljeno=false;
+      },
 
       proveraRole(){
 
@@ -239,6 +255,7 @@ import http from "../../router/http-common";
         this.membership=false;
         this.transactions=false;
         this.kupljeno=false;
+        this.tasks=false;
 
         http       
           .get("/user/getInfo",{
@@ -263,6 +280,8 @@ import http from "../../router/http-common";
         this.membership=true;
         this.transactions=false;
         this.kupljeno=false;
+        this.tasks=false;
+        
 
         http       
           .get("/user/getMSF",{
@@ -304,6 +323,8 @@ import http from "../../router/http-common";
         this.membership=false;
         this.transactions=true;
         this.kupljeno=false;
+        this.tasks=false;
+        
         
         http       
           .get("/payment/getTransaction",{
@@ -333,6 +354,7 @@ import http from "../../router/http-common";
         this.membership=false;
         this.transactions=false;
         this.kupljeno=true;
+        this.tasks=false;
 
 
 

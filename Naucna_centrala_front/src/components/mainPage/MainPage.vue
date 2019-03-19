@@ -16,7 +16,7 @@
       
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-
+            <router-link class="nav-link" to="/mainpage/tasks" v-if="state===true">Tasks</router-link>
             <router-link class="nav-link" to="/mainpage/registration" v-if="state===false">Registration</router-link>
             <router-link class="nav-link" to="/mainpage/login" v-if="state===false">Login</router-link>
             <router-link class="nav-link" to="/mainpage/profile" v-if="state===true"><i class='fas fa-user-alt'></i> Profile</router-link>
