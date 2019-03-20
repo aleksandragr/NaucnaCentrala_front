@@ -12,6 +12,7 @@ import AddLabor from '../components/magazine/AddLabor';
 import ReviewLabor from '../components/labor/ReviewLabor'
 import ReviewPDF from '../components/labor/ReviewPDF';
 import ChangeData from '../components/labor/ChangeData';
+import ChooseReviewer from '../components/labor/ChooseReviewer';
 import VueCookie from "vue-cookie";
 
 Vue.use(VueCookie);
@@ -35,7 +36,8 @@ export default new Router({
         { path: 'proba', component: AddLabor},
         { path: 'review', component: ReviewLabor},
         { path: 'reviewpdf', component: ReviewPDF},
-        { path: 'changedata', component: ChangeData}
+        { path: 'changedata', component: ChangeData},
+        { path: 'choose', component: ChooseReviewer}
 
       ]
     }

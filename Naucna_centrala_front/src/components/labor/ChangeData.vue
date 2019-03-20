@@ -83,7 +83,7 @@ import http from "../../router/http-common";
               }
           })
           .then(response => {
-            
+            window.location.href="http://localhost:8082/#/mainpage/tasks";
             
           })
           .catch(e => {

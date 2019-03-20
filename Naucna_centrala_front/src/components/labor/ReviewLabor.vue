@@ -48,7 +48,7 @@ import http from "../../router/http-common";
     methods: {
 
       relevantornot(yesorno){
-        console.log(yesorno);
+        
 
         var taskid = localStorage.getItem('noviTaskId');
 

@@ -40,8 +40,7 @@ import http from "../../router/http-common";
     },
     methods: {
       formatted(yesorno){
-        console.log(yesorno);
-        console.log(this.komentar+ "  komentar");
+        
 
         var taskid = localStorage.getItem('noviTaskId');
 
