@@ -44,6 +44,7 @@
       </div>
       
     </div>
+    <br>
     <button type="submit" class="btn btn-primary" style="margin-left: 18cm;" v-on:click="izmeni()">Ok</button>
 
   </div>

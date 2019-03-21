@@ -13,6 +13,10 @@ import ReviewLabor from '../components/labor/ReviewLabor'
 import ReviewPDF from '../components/labor/ReviewPDF';
 import ChangeData from '../components/labor/ChangeData';
 import ChooseReviewer from '../components/labor/ChooseReviewer';
+import TaskReviewer from '../components/labor/TaskReviewer';
+import Decisions from '../components/labor/Decisions';
+import UploadPDF from '../components/labor/UploadPDF';
+import AgainReview from '../components/labor/AgainReview';
 import VueCookie from "vue-cookie";
 
 Vue.use(VueCookie);
@@ -37,7 +41,11 @@ export default new Router({
         { path: 'review', component: ReviewLabor},
         { path: 'reviewpdf', component: ReviewPDF},
         { path: 'changedata', component: ChangeData},
-        { path: 'choose', component: ChooseReviewer}
+        { path: 'choose', component: ChooseReviewer},
+        { path: 'reviewer', component: TaskReviewer},
+        { path: 'decisions', component: Decisions},
+        { path: 'upload', component: UploadPDF},
+        { path: 'againreview', component: AgainReview}
 
       ]
     }

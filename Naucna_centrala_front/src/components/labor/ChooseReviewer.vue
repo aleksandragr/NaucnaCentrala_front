@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="velikidiv">
-  <label v-if="dva===true" style="color: red; font-size: 0.7cm">You must add minimal two reviewers !!</label>
+  <label v-if="dva===true" style="color: red; font-size: 0.7cm">You must add a minimum of two reviewers !!</label>
   <br>
   <br>
   <div class="row">
